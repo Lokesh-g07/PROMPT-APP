@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { Suspense } from 'react';
+import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { ShoppingBag } from 'lucide-react';
 
-export default function LoginPage() {
+function LoginContent() {
   const { user, signIn, loading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -35,26 +36,34 @@ export default function LoginPage() {
             Sign in to access your orders, saved items, and personalized AI recommendations.
           </p>
         </div>
-        
+
         <div className="mt-8">
           <button
             onClick={signIn}
             className="w-full flex justify-center py-4 border border-slate-300 rounded-xl shadow-sm bg-white text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all group"
             aria-label="Sign in with Google"
           >
-            <img 
-              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
-              alt="Google logo" 
-              className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform" 
+            <img
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              alt="Google logo"
+              className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform"
             />
             Continue with Google
           </button>
         </div>
-        
+
         <div className="text-center mt-6 text-xs text-slate-500">
           By signing in, you agree to our Terms of Service and Privacy Policy.
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center animate-pulse">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

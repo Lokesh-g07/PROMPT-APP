@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { getProducts } from '@/lib/firestore';
 import ProductCard from '@/components/product/ProductCard';
 import SidebarFilter from '@/components/product/SidebarFilter';
@@ -31,7 +31,9 @@ export default async function ProductsPage({
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex flex-col md:flex-row gap-8">
       {/* Sidebar */}
       <aside className="w-full md:w-64 flex-shrink-0">
-        <SidebarFilter />
+        <Suspense fallback={<div className="h-64 bg-slate-100 animate-pulse rounded-2xl" />}>
+          <SidebarFilter />
+        </Suspense>
       </aside>
 
       {/* Main Content */}
