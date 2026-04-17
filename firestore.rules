@@ -1,0 +1,39 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Products: anyone can read, only admin can write
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == "your_admin_user_id"; // Replace with your ADMIN_UID in console
+    }
+
+    // Users
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // User's cart
+      match /carts/{cartId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+      
+      // User's orders
+      match /orders/{orderId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        // writes could be handled by cloud functions or strictly from client if we assume trust (for prototype):
+        allow write: if request.auth != null && request.auth.uid == userId;
+      }
+      
+      // User's conversations
+      match /conversations/{conversationId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+      
+      // User's view history
+      match /viewHistory/{historyId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}
